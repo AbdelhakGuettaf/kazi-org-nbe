@@ -8,8 +8,7 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -33,6 +32,7 @@ model Agency {
 
   @@unique([name, userId])
   @@index([id, userId])
+  @@index([userId])
 }
 
 model Zone {
@@ -46,6 +46,7 @@ model Zone {
 
   @@unique([zoneName, agencyId])
   @@index([id, zoneName])
+  @@index([agencyId])
 }
 
 model Parcel {
