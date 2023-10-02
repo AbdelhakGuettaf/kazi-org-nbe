@@ -3,7 +3,6 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import bodyParser from 'body-parser';
 import routes from './routes/routes';
-import HttpException from './models/http-exception.model';
 import swaggerDocument from '../docs/swagger.json';
 
 const app = express();
@@ -34,7 +33,7 @@ app.get('/api-docs', (req: Request, res: Response) => {
 });
 
 /* eslint-disable */
-app.use((err: Error | HttpException, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // @ts-ignore
   if (err && err.name === 'UnauthorizedError') {
     return res.status(401).json({
