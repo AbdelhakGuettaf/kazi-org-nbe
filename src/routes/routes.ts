@@ -1,10 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { Router } from 'express';
+import zoneController from '../controllers/zone.controller';
 
-const api = Router().use('/test', async (req, res) => {
-  const prisma = new PrismaClient();
-  const t = await prisma.user.create({ data: { userId: 'test' } });
-
-  res.status(200).json(t);
-});
+const api = Router().use(zoneController);
 export default Router().use('/api', api);
