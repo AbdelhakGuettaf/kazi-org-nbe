@@ -11,48 +11,51 @@ generator client {
   previewFeatures = ["orderByAggregateGroup", "selectRelationCount", "referentialActions"]
 }
 
-model Article {
-  id          Int       @id @default(autoincrement())
-  slug        String    @unique
-  title       String
-  description String
-  body        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  tagList     Tag[]
-  author      User      @relation("UserArticles", fields: [authorId], references: [id], onDelete: Cascade)
-  authorId    Int
-  favoritedBy User[]    @relation("UserFavorites", references: [id])
-  comments    Comment[]
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  body      String
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
-}
-
-model Tag {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  articles Article[]
-}
-
 model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique
-  username   String    @unique
-  password   String
-  image      String?   @default("https://api.realworld.io/images/smiley-cyrus.jpeg")
-  bio        String?
-  articles   Article[] @relation("UserArticles")
-  favorites  Article[] @relation("UserFavorites", references: [id])
-  followedBy User[]    @relation("UserFollows", references: [id])
-  following  User[]    @relation("UserFollows", references: [id])
-  comments   Comment[]
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @unique //clerkJs
+  agencies  Agency[]
+
+  @@index([id, userId])
+}
+
+model Agency {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  userId    String
+  zones     Zone[]
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([name, userId])
+  @@index([id, userId])
+}
+
+model Zone {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  zoneName  String
+  agencyId  String
+  parcels   Parcel[]
+  agency    Agency   @relation(fields: [agencyId], references: [id])
+
+  @@unique([zoneName, agencyId])
+  @@index([id, zoneName])
+}
+
+model Parcel {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  zoneName  String
+  tracking  String //20-2410828-2386869-7
+  code      String //2386869
+  zone      Zone     @relation(fields: [zoneName], references: [id])
+
+  @@unique([zoneName, tracking])
+  @@index([id, code])
 }
