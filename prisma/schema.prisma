@@ -31,8 +31,9 @@ model Agency {
   zones     Zone[]
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([name, userId])
+ 
   @@index([id, userId])
+  @@index([userId])
 }
 
 model Zone {
@@ -41,11 +42,17 @@ model Zone {
   updatedAt DateTime @updatedAt
   zoneName  String
   agencyId  String
+  w         Int
+  h         Int
+  x         Int
+  y         Int
   parcels   Parcel[]
+
   agency    Agency   @relation(fields: [agencyId], references: [id])
 
   @@unique([zoneName, agencyId])
   @@index([id, zoneName])
+  @@index([agencyId])
 }
 
 model Parcel {
@@ -55,8 +62,9 @@ model Parcel {
   zoneName  String
   tracking  String //20-2410828-2386869-7
   code      String //2386869
-  zone      Zone     @relation(fields: [zoneName], references: [id])
-
-  @@unique([zoneName, tracking])
+  zone     Zone   @relation(fields: [zoneName], references: [id])
+ @@unique([zoneName, tracking])
   @@index([id, code])
+
+ 
 }
